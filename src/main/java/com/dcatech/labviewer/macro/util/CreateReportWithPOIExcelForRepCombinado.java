@@ -228,7 +228,56 @@ public class CreateReportWithPOIExcelForRepCombinado {
         return results;
     }
 
+    private List excecuteQueryParameters(List<Argument> arguments, int number, String name) {
+        List results = new ArrayList<>();
+        Session session = em.unwrap(Session.class);
+        StoredProcedureQuery queryExecute = session.createStoredProcedureCall(name);
 
+        try {
+
+            queryExecute.registerStoredProcedureParameter("cuenca", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("campo", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("producto", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("fechaIni", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("fechaFin", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("muestra", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("request", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("punto", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("sitio", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("atributo1", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("value1", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("operador", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("atributo2", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("value2", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("p_LogonName", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("p_SysUserid", String.class, ParameterMode.IN);
+            queryExecute.registerStoredProcedureParameter("Formato", Integer.class, ParameterMode.IN);
+
+            queryExecute.setParameter("cuenca", arguments.get(0).getValue().toString());
+            queryExecute.setParameter("campo", arguments.get(1).getValue().toString());
+            queryExecute.setParameter("producto", arguments.get(2).getValue().toString());
+            queryExecute.setParameter("fechaIni", arguments.get(3).getValue().toString());
+            queryExecute.setParameter("fechaFin", arguments.get(4).getValue().toString());
+            queryExecute.setParameter("muestra", arguments.get(5).getValue().toString());
+            queryExecute.setParameter("request", arguments.get(6).getValue().toString());
+            queryExecute.setParameter("punto", arguments.get(7).getValue().toString());
+            queryExecute.setParameter("sitio", arguments.get(8).getValue().toString());
+            queryExecute.setParameter("atributo1", arguments.get(9).getValue().toString());
+            queryExecute.setParameter("value1", arguments.get(10).getValue().toString());
+            queryExecute.setParameter("operador", arguments.get(11).getValue().toString());
+            queryExecute.setParameter("atributo2", arguments.get(12).getValue().toString());
+            queryExecute.setParameter("value2", arguments.get(13).getValue().toString());
+            queryExecute.setParameter("p_LogonName", arguments.get(14).getValue().toString());
+            queryExecute.setParameter("p_SysUserid", arguments.get(15).getValue().toString());
+            queryExecute.setParameter("Formato", number);
+            queryExecute.registerStoredProcedureParameter("P_DATOS", void.class, ParameterMode.REF_CURSOR);
+            queryExecute.execute();
+            results = queryExecute.getResultList();
+        } catch (Exception ex) {
+            logger.error("Error ejecutando la consulta : " + ex.getMessage(), ex);
+        }
+        return results;
+    }
 
     public byte[] createReport(List<Argument> arguments, int skip, int take, String format) {
 

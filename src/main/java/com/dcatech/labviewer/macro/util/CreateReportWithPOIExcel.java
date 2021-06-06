@@ -234,7 +234,21 @@ public class CreateReportWithPOIExcel {
 
         return xssfWorkbook;
     }
-
+    private List excecuteQueryParameters(String submission, String header) {
+        List results = new ArrayList<>();
+        Session session = em.unwrap(Session.class);
+        StoredProcedureQuery queryExecute = session.createStoredProcedureCall(header);
+        try {
+            queryExecute.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
+            queryExecute.setParameter(1, submission);
+            queryExecute.registerStoredProcedureParameter(2, void.class, ParameterMode.REF_CURSOR);
+            queryExecute.execute();
+            results = queryExecute.getResultList();
+        } catch (Exception ex) {
+            logger.error("Error ejecutando la consulta : " + ex.getMessage(), ex);
+        }
+        return results;
+    }
 
     public byte[] createReport(LVQuery byQueryId, List<Argument> arguments, int skip, int take, String format, String name) {
 
